@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script src="../static/js/vue.js"></script>
+    <script src="../static/js/vue-resource.js"></script>
+</head>
+<body>
+<div id="login">
+    <input v-model="user.password" type="password"><br>
+    <button v-on:click="submit">登陆</button>
+    <button v-on:click="signin">注册</button>
+    <button v-on:click="logout">退出</button><br>
+    <span>{{ msg }}</span>
+</div>
+<div id="newpwd">
+    <span>网址</span>
+    <input v-model="pwdinfo.url" type="text"><br>
+    <span>用户名</span>
+    <input v-model="pwdinfo.username" type="text"><br>
+    <span>类型</span>
+    <input v-model="pwdinfo.type" type="text"><br>
+    <span>密码</span>
+    <input v-model="pwdinfo.pwd" type="text"><br>
+    <button v-on:click="submit">新增</button>
+    <span>{{ msg }}</span>
+</div>
+<div id="grid">
+    <table>
+        <tr>
+            <td>序号</td>
+            <td>网址</td>
+            <td>用户名</td>
+            <td>类型</td>
+            <td>操作</td>
+        </tr>
+        <tr v-for="item in list">
+            <td>{{ item[0] }}</td>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[4] }}</td>
+            <td><a v-bind:href="'javascript:edit(\''+item[0]+'\')'">编辑</a> | <a v-bind:href="'javascript:view(\''+item[0]+'\')'">查看</a> | <a v-bind:href="'javascript:del(\''+item[0]+'\')'">删除</a></td>
+        </tr>
+    </table>
+</div>
+<div id="edit">
+    <span>网址</span>
+    <input v-model="pwdinfo.url" type="text"><br>
+    <span>用户名</span>
+    <input v-model="pwdinfo.username" type="text"><br>
+    <span>类型</span>
+    <input v-model="pwdinfo.type" type="text"><br>
+    <span>密码</span>
+    <input v-model="pwdinfo.pwd" type="text"><br>
+    <button v-on:click="submit">修改</button>
+    <span>{{ msg }}</span>
+</div>
+<script>
+    var login = new Vue({
+        el: '#login',
+        data: {
+            user: {
+                password: ''
+            },
+            msg: ''
+        },
+        methods: {
+            submit: function (event) {
+                this.$http.post('/login', this.user).then(function(res){
+                    this.msg = res.body.msg;
+                });
+            },
+            signin: function (event) {
+                this.$http.post('/signin', this.user).then(function(res){
+                    this.msg = res.body.msg;
+                });
+            },
+            logout: function (event) {
+                this.$http.get('/logout').then(function(res){
+                    this.msg = res.body.msg;
+                });
+            }
+        }
+    });
+
+    var guid = new Vue({
+        el: '#grid',
+        data: {
+            list: []
+        },
+        mounted: function () {
+            this.$http.post('/pwd/list').then(function (res) {
+                this.list = res.body;
+            });
+        }
+    });
+    var newpwd = new Vue({
+        el: '#newpwd',
+        data: {
+            pwdinfo: {
+                url: '',
+                username: '',
+                type: '',
+                pwd: ''
+            },
+            msg: ''
+        },
+        methods: {
+            submit: function (event) {
+                this.$http.post('/pwd/add', this.pwdinfo).then(function(ret){
+                    this.msg = ret.body.msg;
+                });
+            }
+        }
+    });
+    var editpwd = new Vue({
+        el: '#edit',
+        data: {
+            pwdinfo: {
+                url: '',
+                username: '',
+                type: '',
+                pwd: '',
+                id: ''
+            },
+            msg: ''
+        },
+        methods: {
+            submit: function (event) {
+                this.$http.post('/pwd/edit', this.pwdinfo).then(function(ret){
+                    this.msg = ret.body.msg;
+                });
+            },
+            refresh: function (id) {
+                var that = this;
+                this.$http.get('/pwd/get/'+id).then(function(ret){
+                    that.pwdinfo.url = ret.body[1];
+                    that.pwdinfo.username = ret.body[2];
+                    that.pwdinfo.type = ret.body[4];
+                    that.pwdinfo.pwd = ret.body[3];
+                    that.pwdinfo.id = id;
+                });
+            }
+        }
+    });
+    function edit(id) {
+        editpwd.refresh(id);
+    }
+</script>
+</body>
+</html>
