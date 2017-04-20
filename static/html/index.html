@@ -2,59 +2,88 @@
 <html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>首页</title>
     <script src="../static/js/vue.js"></script>
     <script src="../static/js/vue-resource.js"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/jquery-3.2.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div id="login">
-    <input v-model="user.password" type="password"><br>
-    <button v-on:click="submit">登陆</button>
-    <button v-on:click="signin">注册</button>
-    <button v-on:click="logout">退出</button><br>
-    <span>{{ msg }}</span>
-</div>
-<div id="newpwd">
-    <span>网址</span>
-    <input v-model="pwdinfo.url" type="text"><br>
-    <span>用户名</span>
-    <input v-model="pwdinfo.username" type="text"><br>
-    <span>类型</span>
-    <input v-model="pwdinfo.type" type="text"><br>
-    <span>密码</span>
-    <input v-model="pwdinfo.pwd" type="text"><br>
-    <button v-on:click="submit">新增</button>
-    <span>{{ msg }}</span>
-</div>
-<div id="grid">
-    <table>
-        <tr>
-            <td>序号</td>
-            <td>网址</td>
-            <td>用户名</td>
-            <td>类型</td>
-            <td>操作</td>
-        </tr>
-        <tr v-for="item in list">
-            <td>{{ item[0] }}</td>
-            <td>{{ item[1] }}</td>
-            <td>{{ item[2] }}</td>
-            <td>{{ item[4] }}</td>
-            <td><a v-bind:href="'javascript:edit(\''+item[0]+'\')'">编辑</a> | <a v-bind:href="'javascript:view(\''+item[0]+'\')'">查看</a> | <a v-bind:href="'javascript:del(\''+item[0]+'\')'">删除</a></td>
-        </tr>
-    </table>
-</div>
-<div id="edit">
-    <span>网址</span>
-    <input v-model="pwdinfo.url" type="text"><br>
-    <span>用户名</span>
-    <input v-model="pwdinfo.username" type="text"><br>
-    <span>类型</span>
-    <input v-model="pwdinfo.type" type="text"><br>
-    <span>密码</span>
-    <input v-model="pwdinfo.pwd" type="text"><br>
-    <button v-on:click="submit">修改</button>
-    <span>{{ msg }}</span>
+<div class="container-fluid">
+    <div id="login">
+        <div class="form-inline">
+            <div class="form-group">
+                <label class="sr-only" for="password">Password</label>
+                <input v-model="user.password" id="password" class="form-control" placeholder="Password"
+                       type="password">
+            </div>
+            <button v-on:click="submit" class="btn btn-default">登录</button>
+            <!-- <button v-on:click="signin">注册</button> -->
+            <button v-on:click="logout" class="btn btn-default">退出</button>
+            <span>{{ msg }}</span>
+        </div>
+    </div>
+    <div id="newpwd">
+        <div>
+            <div class="form-group">
+                <input v-model="pwdinfo.url" class="form-control" type="text" placeholder="网址">
+            </div>
+            <div class="form-group">
+                <input v-model="pwdinfo.username" class="form-control" type="text" placeholder="用户名">
+            </div>
+            <div class="form-group">
+                <input v-model="pwdinfo.type" class="form-control" type="text" placeholder="类型">
+            </div>
+            <div class="form-group">
+                <input v-model="pwdinfo.pwd" class="form-control" type="text" placeholder="密码">
+            </div>
+            <button v-on:click="submit" class="btn btn-default">新增</button>
+            <span>{{ msg }}</span>
+        </div>
+    </div>
+    <div id="grid">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>网址</th>
+                <th>用户名</th>
+                <th>类型</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in list">
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
+                <td>{{ item[4] }}</td>
+                <td><a v-bind:href="'javascript:edit(\''+item[0]+'\')'">编辑</a> | <a
+                        v-bind:href="'javascript:del(\''+item[0]+'\')'">删除</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="edit">
+        <div>
+            <div class="form-group">
+                <input v-model="pwdinfo.url" class="form-control" type="text" placeholder="网址">
+            </div>
+            <div class="form-group">
+                <input v-model="pwdinfo.username" class="form-control" type="text" placeholder="用户名">
+            </div>
+            <div class="form-group">
+                <input v-model="pwdinfo.type" class="form-control" type="text" placeholder="类型">
+            </div>
+            <div class="form-group">
+                <input v-model="pwdinfo.pwd" class="form-control" type="text" placeholder="密码">
+            </div>
+            <button v-on:click="submit" class="btn btn-default">修改</button>
+            <span>{{ msg }}</span>
+        </div>
+    </div>
 </div>
 <script>
     var login = new Vue({
@@ -67,24 +96,24 @@
         },
         methods: {
             submit: function (event) {
-                this.$http.post('/login', this.user).then(function(res){
+                this.$http.post('/login', this.user).then(function (res) {
                     this.msg = res.body.msg;
                 });
             },
             signin: function (event) {
-                this.$http.post('/signin', this.user).then(function(res){
+                this.$http.post('/signin', this.user).then(function (res) {
                     this.msg = res.body.msg;
                 });
             },
             logout: function (event) {
-                this.$http.get('/logout').then(function(res){
+                this.$http.get('/logout').then(function (res) {
                     this.msg = res.body.msg;
                 });
             }
         }
     });
 
-    var guid = new Vue({
+    var grid = new Vue({
         el: '#grid',
         data: {
             list: []
@@ -93,6 +122,13 @@
             this.$http.post('/pwd/list').then(function (res) {
                 this.list = res.body;
             });
+        },
+        methods: {
+            del: function (id) {
+                var that = this;
+                this.$http.get('/pwd/del/' + id).then(function (ret) {
+                });
+            }
         }
     });
     var newpwd = new Vue({
@@ -108,7 +144,7 @@
         },
         methods: {
             submit: function (event) {
-                this.$http.post('/pwd/add', this.pwdinfo).then(function(ret){
+                this.$http.post('/pwd/add', this.pwdinfo).then(function (ret) {
                     this.msg = ret.body.msg;
                 });
             }
@@ -128,13 +164,13 @@
         },
         methods: {
             submit: function (event) {
-                this.$http.post('/pwd/edit', this.pwdinfo).then(function(ret){
+                this.$http.post('/pwd/edit', this.pwdinfo).then(function (ret) {
                     this.msg = ret.body.msg;
                 });
             },
             refresh: function (id) {
                 var that = this;
-                this.$http.get('/pwd/get/'+id).then(function(ret){
+                this.$http.get('/pwd/get/' + id).then(function (ret) {
                     that.pwdinfo.url = ret.body[1];
                     that.pwdinfo.username = ret.body[2];
                     that.pwdinfo.type = ret.body[4];
@@ -146,6 +182,9 @@
     });
     function edit(id) {
         editpwd.refresh(id);
+    }
+    function del(id) {
+        grid.del(id);
     }
 </script>
 </body>

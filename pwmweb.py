@@ -40,7 +40,7 @@ def login():
 def signin():
     req_data = request.get_data()
     data = json.loads(req_data)
-    add_user(data['password'])
+    #add_user(data['password'])
     return '{"status":true,"msg":"注册成功"}'
 
 
@@ -57,7 +57,7 @@ def logout():
 @app.route('/pwd/list', methods=['POST'])
 def pwd_list():
     if 'is_login' not in session:
-        return None
+        return '[]'
     req_data = request.get_data()
     if not req_data:
         return json.dumps(list_info())
@@ -86,19 +86,19 @@ def pwd_edit():
     req_data = request.get_data()
     data = json.loads(req_data)
     del_pwd(data['id'])
-    status, msg = add_pwd(data['pwd'], data['url'], data['username'], data['type'])
+    status, msg = add_pwd(session['password'], data['pwd'], data['url'], data['username'], data['type'])
     if status:
-        return '{"status":true,"msg":"' + msg + '"}'
+        return '{"status":true,"msg":"修改成功"}'
     else:
         return '{"status":false,"msg":"' + msg + '"}'
 
 
-@app.route('/pwd/del', methods=['POST'])
-def pwd_del():
+@app.route('/pwd/del/<infoid>', methods=['GET'])
+def pwd_del(infoid):
     if 'is_login' not in session:
         return None
-    del_pwd()
-    return '删除成功！'
+    del_pwd(infoid)
+    return '{"status":false,"msg":"删除成功"}'
 
 
 @app.route('/pwd/get/<infoid>', methods=['GET'])
@@ -109,4 +109,4 @@ def pwd_get(infoid):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=8080, debug=True)

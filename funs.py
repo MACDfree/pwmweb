@@ -81,22 +81,22 @@ def aes_encrypt(pwd, text):
     :return: 密文（使用base64编码）
     """
     v1 = pwd.encode('utf-8')
-    print(v1)
+    #print(v1)
     v2 = __fill_str(v1)
-    print(v2)
+    #print(v2)
 
     encrypt = AES.new(__fill_str(pwd.encode('utf-8')), AES.MODE_CBC, iv)
 
     v3 = text.encode('utf-8')
-    print(v3)
+    #print(v3)
     v4 = __fill_str(v3)
-    print(v4)
+    #print(v4)
     v5 = encrypt.encrypt(v4)
-    print(v5)
+    #print(v5)
     v6 = b64encode(v5)
-    print(v6)
+    #print(v6)
     v7 = v6.decode('utf-8')
-    print(v7)
+    #print(v7)
 
     return v7
 
@@ -116,22 +116,22 @@ def aes_decrypt(pwd, text):
     :return: 原文
     """
     v1 = pwd.encode('utf-8')
-    print(v1)
+    #print(v1)
     v2 = __fill_str(v1)
-    print(v2)
+    #print(v2)
 
     decrypt = AES.new(__fill_str(pwd.encode('utf-8')), AES.MODE_CBC, iv)
 
     v3 = text.encode('utf-8')
-    print(v3)
+    #print(v3)
     v4 = b64decode(v3)
-    print(v4)
+    #print(v4)
     v5 = decrypt.decrypt(v4)
-    print(v5)
+    #print(v5)
     v6 = v5.rstrip(b'\0')
-    print(v6)
+    #print(v6)
     v7 = v6.decode('utf-8')
-    print(v7)
+    #print(v7)
 
     return v7
 
