@@ -26,7 +26,7 @@ def login():
         else:
             return '{"status":true}'
     else:
-        req_data = request.get_data()
+        req_data = request.get_data(as_text=True)
         data = json.loads(req_data)
         if auth_user(data['password']):
             session['is_login'] = True
@@ -36,12 +36,12 @@ def login():
             return '{"status":false,"msg":"登陆失败"}'
 
 
-@app.route('/signin', methods=['POST'])
-def signin():
-    req_data = request.get_data()
-    data = json.loads(req_data)
-    #add_user(data['password'])
-    return '{"status":true,"msg":"注册成功"}'
+# @app.route('/signin', methods=['POST'])
+# def signin():
+#     req_data = request.get_data(as_text=True)
+#     data = json.loads(req_data)
+#     #add_user(data['password'])
+#     return '{"status":true,"msg":"注册成功"}'
 
 
 @app.route('/logout')
@@ -58,7 +58,7 @@ def logout():
 def pwd_list():
     if 'is_login' not in session:
         return '[]'
-    req_data = request.get_data()
+    req_data = request.get_data(as_text=True)
     if not req_data:
         return json.dumps(list_info())
     else:
@@ -70,7 +70,7 @@ def pwd_list():
 def pwd_add():
     if 'is_login' not in session:
         return None
-    req_data = request.get_data()
+    req_data = request.get_data(as_text=True)
     data = json.loads(req_data)
     status, msg = add_pwd(session['password'], data['pwd'], data['url'], data['username'], data['type'])
     if status:
@@ -83,7 +83,7 @@ def pwd_add():
 def pwd_edit():
     if 'is_login' not in session:
         return None
-    req_data = request.get_data()
+    req_data = request.get_data(as_text=True)
     data = json.loads(req_data)
     del_pwd(data['id'])
     status, msg = add_pwd(session['password'], data['pwd'], data['url'], data['username'], data['type'])
